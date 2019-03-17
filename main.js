@@ -3,11 +3,9 @@ $(function () {
     let textLength = 3;
     let fiveLetterWords = mmm.filter(e =>  e.length == textLength);
     let lvl = 5;
-    let text = baWords.split("\n");
-    // console.log(text);
-    // for (var i = 0; i < text.length; i++) {
-    //   console.log(i + " -- "+text[i]);
-    // }
+    // let text = baWords.split("\n");
+    let text = fiveLetterWords;
+    let gameEnd = false;
     let activeText = [];
     let speed = 1;
     let allLines = $('.line');
@@ -16,11 +14,11 @@ $(function () {
     let resultDiv = $('.display-result');
 
 
-// let speedUp = setInterval(()=>{
-//     textLength++;
-//     text = mmm.filter(e => e.length == textLength);
-//     time += 700;
-// },20000)
+let speedUp = setInterval(()=>{
+    textLength++;
+    text = mmm.filter(e => e.length == textLength);
+    time += 700;
+},20000)
 
   let mainInput = $('#main-input');
       mainInput.focus()
@@ -41,7 +39,7 @@ $(function () {
         }
     })
 
-let moveAll =   setInterval(()=>{
+let moveAll = setInterval(()=>{
       $('span').animate(
           {
               left: '+='+speed
@@ -52,6 +50,7 @@ let moveAll =   setInterval(()=>{
               }
           })
   },100)
+
 function insertSpans() {
     for (let i = 0; i < lineNumber; i++) {
         const line = $(allLines[i]);
@@ -62,11 +61,11 @@ function insertSpans() {
             line.append('<span>' + text + '</span>')
         }
     }
-    setTimeout(insertSpans,time);
+    if(!gameEnd){
+        setTimeout(insertSpans, time);
+    }
 }
 insertSpans()
-
-
 
 function chooseText() {
     let rand = Math.floor(Math.random()*text.length);
@@ -76,8 +75,8 @@ function chooseText() {
     return forReturn;
 }
 
-
 function clearAllIntervals() {
-    clearInterval(moveAll)
+    clearInterval(moveAll);
+    gameEnd = true;
 }
 })
