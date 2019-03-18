@@ -60,6 +60,20 @@ body {
     border-bottom: 1px  solid #eee;
     font-size: 38px;
     text-align: center;
+    color: aliceblue;
+}
+.nickname button {
+    display: block;
+    margin: 0 auto;
+    width: 160px;
+    height: 30px;
+    border: 2px solid #f90; 
+    border-radius: 4px;
+    opacity: .8;
+}
+.nickname button:hover {
+    background-color: tomato;
+    color: #eee;
 }
 .line {
     position: absolute;
