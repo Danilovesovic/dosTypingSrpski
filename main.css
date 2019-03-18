@@ -27,6 +27,39 @@ body {
     width: 2px;
     background-color: tomato;
 }
+.startBtn {
+    position: absolute;
+    width: 200px;
+    height: 40px;
+    line-height: 38px;
+    text-align: center;
+    font-size: 28px;
+    background-color: chocolate;
+    color: white;
+    border-radius: 6px;
+    top: 260px;
+    left: 325px;
+    user-select: none;
+}
+.nickname {
+    width: 400px;
+    height: 300px;
+    position: absolute;
+    background-color: rgba(8,8,8,.7);
+    top: 125px;
+    left: 245px;
+}
+.nickname input {
+    display: block;
+    width: 300px;
+    margin: 50px 50px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    border-bottom: 1px  solid #eee;
+    font-size: 38px;
+    text-align: center;
+}
 .line {
     position: absolute;
     left: 0;

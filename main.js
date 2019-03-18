@@ -1,6 +1,11 @@
 $(function () {
-
-    let textLength = 3;
+let startBtn = $('.startBtn');
+    startBtn.on('click',function(){
+        $(this).hide();
+        startGame()
+    })
+    function startGame(){
+        let textLength = 3;
     let fiveLetterWords = mmm.filter(e =>  e.length == textLength);
     let lvl = 5;
     // let text = baWords.split("\n");
@@ -31,7 +36,7 @@ let speedUp = setInterval(()=>{
           console.log(activeText);
           $('span').filter(function () {
              return $(this).text() === self.val();
-          }).css('background','skyblue').fadeOut(400,function(){
+          }).css('background','skyblue').fadeOut(100,function(){
               $(this).remove();
               resultDiv.html(parseInt(resultDiv.html())+1)
           })
@@ -79,4 +84,5 @@ function clearAllIntervals() {
     clearInterval(moveAll);
     gameEnd = true;
 }
+    }
 })
