@@ -48,6 +48,7 @@ body {
     background-color: rgba(8,8,8,.7);
     top: 125px;
     left: 245px;
+    display: none;
 }
 .nickname input {
     display: block;
