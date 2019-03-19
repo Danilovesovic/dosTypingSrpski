@@ -1,16 +1,43 @@
 $(function () {
+displayWinners();
 let startBtn = $('.startBtn');
 let nickNameDiv = $('.nickname');
 let saveScore = $('#save-score');
 let startAgain = $('#start-again');
-
+let winnerScores = $('.winner-scores');
+let inputForNick = $('#inputForNick')
+let wordCount = 0;
 // EVENTS
-    startBtn.on('click',function(){
-       
+    startBtn.on('click',function(){     
         startGame()
     })
     saveScore.on('click',function(){
-        // connect to db and save
+        let nick;
+        if(inputForNick.val() != ""){
+            nick = inputForNick.val();
+        }   else{
+            nick = "Guest";
+        }     
+        $.ajax({
+            url: "/insertNick",
+            method: "post",
+            data : {
+                nick : nick,
+                wordCount: wordCount
+            }
+        })
+        .done(function(res){
+            console.log(res);  
+            // location.reload();
+        })
+        .fail(function(){
+            console.log('fail');
+            
+        })
+        .always(function(){
+            console.log("Always");
+            
+        })
     })
     startAgain.on('click',function(){
         location.reload()
@@ -47,11 +74,11 @@ let speedUp = setInterval(()=>{
         if(activeText.includes(this.value)){
           let index = activeText.indexOf(this.value);
           activeText.splice(index,1);
-          console.log(activeText);
           $('span').filter(function () {
              return $(this).text() === self.val();
           }).css('background','skyblue').fadeOut(100,function(){
               $(this).remove();
+              wordCount++;
               resultDiv.html(parseInt(resultDiv.html())+1)
           })
             mainInput.val("")
@@ -99,5 +126,19 @@ function clearAllIntervals() {
     gameEnd = true;
     nickNameDiv.show()
 }
+    }
+
+    function displayWinners(){
+        
+            $.ajax({
+                url : "/nicks",
+            })
+            .then(function(res){
+                res.forEach((e,i) => {
+                    winnerScores.append(`<p><kbd>${i + 1}</kbd> ${e.nick} (${e.wordNumber})</p>`)
+                })
+                
+            })
+        
     }
 })
