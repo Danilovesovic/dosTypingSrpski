@@ -7,7 +7,7 @@ let startAgain = $('#start-again');
 let winnerScores = $('.winner-scores');
 let inputForNick = $('#inputForNick')
 let wordCount = 0;
-// EVENTS
+// EVENTS //////////////
     startBtn.on('click',function(){     
         startGame()
     })
@@ -15,45 +15,44 @@ let wordCount = 0;
         let nick;
         if(inputForNick.val() != ""){
             nick = inputForNick.val();
+            localStorage.nick = nick;
+
+            $.ajax({
+                url: "/insertNick",
+                method: "post",
+                data : {
+                    nick : nick,
+                    wordCount: wordCount
+                }
+            })
+            .done(function(res){
+                console.log(res);  
+                location.reload();
+            })
+            .fail(function(){
+                console.log('fail');
+                
+            })
         }   else{
-            nick = "Guest";
+            location.reload()
         }     
-        $.ajax({
-            url: "/insertNick",
-            method: "post",
-            data : {
-                nick : nick,
-                wordCount: wordCount
-            }
-        })
-        .done(function(res){
-            console.log(res);  
-            // location.reload();
-        })
-        .fail(function(){
-            console.log('fail');
-            
-        })
-        .always(function(){
-            console.log("Always");
-            
-        })
     })
     startAgain.on('click',function(){
         location.reload()
     })
+// EVENTS END //////////////
+
     function startGame(){
         startBtn.hide();
         nickNameDiv.hide()
 
     let textLength = 3;
     let fiveLetterWords = mmm.filter(e =>  e.length == textLength);
-    let lvl = 5;
-    // let text = baWords.split("\n");
+    let lvl = 6;
     let text = fiveLetterWords;
     let gameEnd = false;
     let activeText = [];
-    let speed = 10;
+    let speed = 1;
     let allLines = $('.line');
     let lineNumber = allLines.length;
     let time = 7000;
@@ -69,21 +68,22 @@ let speedUp = setInterval(()=>{
   let mainInput = $('#main-input');
       mainInput.focus()
 
-    mainInput.on('keyup',function(){
-      let self = $(this);
-        if(activeText.includes(this.value)){
-          let index = activeText.indexOf(this.value);
-          activeText.splice(index,1);
-          $('span').filter(function () {
-             return $(this).text() === self.val();
-          }).css('background','skyblue').fadeOut(100,function(){
-              $(this).remove();
-              wordCount++;
-              resultDiv.html(parseInt(resultDiv.html())+1)
-          })
-            mainInput.val("")
-        }
-    })
+    mainInput.on('keyup',checkInputTypings)
+    function checkInputTypings(){
+        let self = $(this);
+          if(activeText.includes(this.value)){
+            let index = activeText.indexOf(this.value);
+            activeText.splice(index,1);
+            $('span').filter(function () {
+               return $(this).text() === self.val();
+            }).css('background','skyblue').fadeOut(100,function(){
+                $(this).remove();
+                wordCount++;
+                resultDiv.html(parseInt(resultDiv.html())+1)
+            })
+              mainInput.val("")
+          }
+      }
 
 let moveAll = setInterval(()=>{
       $('span').animate(
@@ -123,13 +123,38 @@ function chooseText() {
 
 function clearAllIntervals() {
     clearInterval(moveAll);
+    clearInterval(speedUp)
+    mainInput.off('keyup',checkInputTypings)
     gameEnd = true;
+    if(localStorage.nick){
+        inputForNick.val(localStorage.nick)
+    }
     nickNameDiv.show()
 }
     }
 
     function displayWinners(){
-        
+        if(localStorage.nick){
+            $.ajax({
+                url : '/getAll',
+                method : 'get'
+            })
+            .done(function(res){
+                let index = res.map(e => e.nick).indexOf(localStorage.nick);
+                if(index != -1){
+                    index++;
+                    first10(index);
+                }else{
+                    first10(null)
+                }
+                
+            })
+        }else{
+            first10(null)
+        }
+
+        function first10(index){
+
             $.ajax({
                 url : "/nicks",
             })
@@ -137,8 +162,13 @@ function clearAllIntervals() {
                 res.forEach((e,i) => {
                     winnerScores.append(`<p><kbd>${i + 1}</kbd> ${e.nick} (${e.wordNumber})</p>`)
                 })
-                
+                if(index){
+                    winnerScores.append(`<p> ... </p>`)
+                    winnerScores.append(`<p><kbd>${index}</kbd> ${localStorage.nick}`)
+                }
             })
+        }
+        
         
     }
 })

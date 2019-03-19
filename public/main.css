@@ -172,8 +172,6 @@ span {
 .winner-scores {
     position: absolute;
     text-align: center;
-
-    /* background-color: aliceblue; */
     width: 200px;
     height: 600px;
     top: 0;
