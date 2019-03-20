@@ -177,3 +177,14 @@ span {
     top: 0;
     right: -200px;
 }
+
+@media (min-width:1200px){
+    .container {
+        margin: 20px auto;
+    }
+}
+@media (min-width:1400px){
+    .container {
+        margin: 40px auto;
+    }
+}
