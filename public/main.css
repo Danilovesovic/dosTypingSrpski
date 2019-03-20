@@ -139,7 +139,8 @@ span {
     padding: 2px 4px;
     color: black;
     border: 1px solid black;
-
+    box-shadow: 0 0 2px white;
+    border-radius: 3px;
 }
 .typing-line {
     position: absolute;
@@ -177,7 +178,16 @@ span {
     top: 0;
     right: -200px;
 }
-
+.clear-screen {
+    position: absolute;
+    top: 480px;
+    left: 20%;
+    display: none;
+}
+.danger {
+    background-color: #d82505;
+    color: white;
+}
 @media (min-width:1200px){
     .container {
         margin: 20px auto;

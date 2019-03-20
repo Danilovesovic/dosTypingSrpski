@@ -5,7 +5,8 @@ let nickNameDiv = $('.nickname');
 let saveScore = $('#save-score');
 let startAgain = $('#start-again');
 let winnerScores = $('.winner-scores');
-let inputForNick = $('#inputForNick')
+let inputForNick = $('#inputForNick');
+let clearScreen = $('.clear-screen');
 let wordCount = 0;
 // EVENTS //////////////
     startBtn.on('click',function(){     
@@ -48,7 +49,7 @@ let wordCount = 0;
 
     let textLength = 3;
     let fiveLetterWords = mmm.filter(e =>  e.length == textLength);
-    let lvl = 6;
+    let lvl = 6; // default level je 6
     let text = fiveLetterWords;
     let gameEnd = false;
     let activeText = [];
@@ -74,6 +75,9 @@ let speedUp = setInterval(()=>{
           if(activeText.includes(this.value)){
             let index = activeText.indexOf(this.value);
             activeText.splice(index,1);
+            if(activeText.length == 0){
+                clearScreen.fadeIn(500).fadeOut(300)
+            }
             $('span').filter(function () {
                return $(this).text() === self.val();
             }).css('background','skyblue').fadeOut(100,function(){
@@ -93,6 +97,8 @@ let moveAll = setInterval(()=>{
           , 10,function () {
               if($(this).position().left > 850){
                 clearAllIntervals();
+              }else if($(this).position().left > 700 && $(this).position().left < 710){
+                $(this).addClass('danger')
               }
           })
   },100)
