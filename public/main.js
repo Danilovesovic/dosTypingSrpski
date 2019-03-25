@@ -7,8 +7,17 @@ $(function () {
     let winnerScores = $('.winner-scores');
     let inputForNick = $('#inputForNick');
     let clearScreen = $('.clear-screen');
+    let languageDivs = $('.language');
     let wordCount = 0;
     // EVENTS //////////////
+
+    // add selected to laguage
+
+    languageDivs.on('click',function(){
+        languageDivs.removeClass('selected');
+        $(this).addClass('selected');
+    })
+
     startBtn.on('click', function () {
         startGame()
     })
@@ -44,11 +53,16 @@ $(function () {
     // EVENTS END //////////////
 
     function startGame() {
+        languageDivs.hide()
         startBtn.hide();
         nickNameDiv.hide()
-
+        let language = $('.selected').html();
+        
         let textLength = 3;
-        let fiveLetterWords = mmm.filter(e => e.length == textLength);
+        let srpski = srpskeReci.split("\n");
+        // let fiveLetterWords = mmm.filter(e => e.length == textLength);
+        // let fiveLetterWords = srpski.filter(e => e.length == textLength);
+        let fiveLetterWords = (language == 'en') ? mmm.filter(e => e.length == textLength) : srpski.filter(e => e.length == textLength)
         let lvl = 6; // default level je 6
         let text = fiveLetterWords;
         let gameEnd = false;
@@ -62,7 +76,8 @@ $(function () {
 
         let speedUp = setInterval(() => {
             textLength++;
-            text = mmm.filter(e => e.length == textLength);
+            // text = mmm.filter(e => e.length == textLength);
+            text = (language == 'en') ? mmm.filter(e => e.length == textLength) : srpski.filter(e => e.length == textLength)
             time += 700;
         }, 20000)
 
@@ -124,7 +139,7 @@ $(function () {
 
         function chooseText() {
             let rand = Math.floor(Math.random() * text.length);
-            let forReturn = text[rand];
+            let forReturn = text[rand].toLowerCase();
             activeText.push(forReturn);
             text.splice(rand, 1);
             return forReturn;
