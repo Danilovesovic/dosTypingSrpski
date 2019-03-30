@@ -13,23 +13,23 @@ app.get('/nicks',function(req,res){
         console.log(docs);
         res.send(docs)
     })
-  
+
 })
 app.get('/getAll',function(req,res){
     db.nicks.find().sort({wordNumber : -1},function(err,docs){
         console.log(docs);
         res.send(docs)
-    })  
+    })
 })
 
 app.post('/insertNick',function(req,res){
     db.nicks.insert({nick: req.body.nick,wordNumber: parseInt(req.body.wordCount)},function (err,docs) {
-        if(err) console.log(err); 
+        if(err) console.log(err);
         res.send("Ok");
     })
-    
+
 })
-app.listen(8080,function(){
+app.listen(80,function(){
     console.log('Listening to port 80');
-    
+
 })
