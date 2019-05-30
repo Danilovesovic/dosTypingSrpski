@@ -1,1 +1,180 @@
-$(function(){!function(){localStorage.nick?$.ajax({url:"/getAll",method:"get"}).done(function(t){let n=t.map(e=>e.nick).indexOf(localStorage.nick);e(-1!=n?++n:null)}):e(null);function e(e){$.ajax({url:"/nicks"}).then(function(t){t.forEach((e,t)=>{l.append(`<p><kbd>${t+1}</kbd> ${e.nick} (${e.wordNumber})</p>`)}),e&&(l.append("<p> ... </p>"),l.append(`<p><kbd>${e}</kbd> ${localStorage.nick}`))})}}();let e=$(".startBtn"),t=$(".nickname"),n=($("#save-score"),$("#start-again")),l=$(".winner-scores"),a=$("#inputForNick"),i=$(".clear-screen"),o=$(".language"),c=0;o.on("click",function(){o.removeClass("selected"),$(this).addClass("selected")}),e.on("click",function(){!function(){o.hide(),e.hide(),t.hide();let n=$(".selected").html(),l=3,s=srpskeReci.split("\n"),r="en"==n?mmm.filter(e=>e.length==l):s.filter(e=>e.length==l),u=6,f=r,p=!1,d=[],h=$(".line"),m=h.length,k=7e3,g=$(".display-result"),v=setInterval(()=>{l++,f="en"==n?mmm.filter(e=>e.length==l):s.filter(e=>e.length==l),k+=700},2e4),b=$("#main-input");function y(){let e=$(this);if(d.includes(this.value)){let t=d.indexOf(this.value);d.splice(t,1),0==d.length&&i.fadeIn(500).fadeOut(300),$("span").filter(function(){return $(this).text()===e.val()}).css("background","skyblue").fadeOut(100,function(){$(this).remove(),c++,g.html(parseInt(g.html())+1)}),b.val("")}}b.focus(),b.on("keyup",y);let I=setInterval(()=>{let e=$("span");e.css({left:"+=9"}),$.each(e,function(e,n){$(n).position().left>850?function(){clearInterval(I),clearInterval(v),b.off("keyup",y),p=!0,localStorage.nick&&a.val(localStorage.nick);t.show()}():$(n).position().left>700&&$(n).position().left<710&&$(n).addClass("danger")})},100);function w(){let e=Math.floor(Math.random()*f.length),t=f[e].toLowerCase();return d.push(t),f.splice(e,1),t}!function e(){for(let e=0;e<m;e++){const t=$(h[e]);let n=Math.floor(20*Math.random());if(n<=u){let e=w();t.append("<span>"+e+"</span>")}}p||setTimeout(e,k)}()}()}),$("#finish_form").submit(function(e){return $('[type="submit"]').attr("value","yee"),$("<input />").attr("type","hidden").attr("name","fw").attr("value",c).appendTo(this),!0}),n.on("click",function(){location.reload()})});
+$(function () {
+    displayWinners();
+    let startBtn = $('.startBtn');
+    let nickNameDiv = $('.nickname');
+    let saveScore = $('#save-score');
+    let startAgain = $('#start-again');
+    let winnerScores = $('.winner-scores');
+    let inputForNick = $('#inputForNick');
+    let clearScreen = $('.clear-screen');
+    let languageDivs = $('.language');
+    let wordCount = 0;
+    // EVENTS //////////////
+
+    // add selected to laguage
+
+    languageDivs.on('click',function(){
+        languageDivs.removeClass('selected');
+        $(this).addClass('selected');
+    })
+
+    startBtn.on('click', function () {
+        startGame()
+    })
+
+    $("#finish_form").submit( function(eventObj) {
+        $('[type="submit"]').attr('value','yee');
+        $('<input />').attr('type', 'hidden')
+            .attr('name', "fw")
+            .attr('value', wordCount)
+            .appendTo(this);
+        return true;
+    });
+
+    startAgain.on('click', function () {
+        location.reload()
+    })
+    // EVENTS END //////////////
+
+    function startGame() {
+        languageDivs.hide()
+        startBtn.hide();
+        nickNameDiv.hide()
+        let language = $('.selected').html();
+        
+        let textLength = 3;
+        let srpski = srpskeReci.split("\n");
+        // let fiveLetterWords = mmm.filter(e => e.length == textLength);
+        // let fiveLetterWords = srpski.filter(e => e.length == textLength);
+        let fiveLetterWords = (language == 'en') ? mmm.filter(e => e.length == textLength) : srpski.filter(e => e.length == textLength)
+        let lvl = 6; // default level je 6
+        let text = fiveLetterWords;
+        let gameEnd = false;
+        let activeText = [];
+        let speed = 1; //default 1
+        let allLines = $('.line');
+        let lineNumber = allLines.length;
+        let time = 7000;
+        let resultDiv = $('.display-result');
+
+
+        let speedUp = setInterval(() => {
+            textLength++;
+            // text = mmm.filter(e => e.length == textLength);
+            text = (language == 'en') ? mmm.filter(e => e.length == textLength) : srpski.filter(e => e.length == textLength)
+            time += 700;
+        }, 20000)
+
+        let mainInput = $('#main-input');
+        mainInput.focus()
+
+        mainInput.on('keyup', checkInputTypings)
+        function checkInputTypings() {
+            let self = $(this);
+            if (activeText.includes(this.value)) {
+                let index = activeText.indexOf(this.value);
+                activeText.splice(index, 1);
+                if (activeText.length == 0) {
+                    clearScreen.fadeIn(500).fadeOut(300)
+                }
+                $('span').filter(function () {
+                    return $(this).text() === self.val();
+                }).css('background', 'skyblue').fadeOut(100, function () {
+                    $(this).remove();
+                    wordCount++;
+                    resultDiv.html(parseInt(resultDiv.html()) + 1)
+                })
+                mainInput.val("")
+            }
+        }
+
+        let moveAll = setInterval(() => {
+            let allSpans = $('span');
+            allSpans.css(
+                {
+                    left: '+=' + speed
+                }
+            )
+            $.each(allSpans, function (i, e) {
+                if ($(e).position().left > 850) {
+                    clearAllIntervals();
+                } else if ($(e).position().left > 700 && $(e).position().left < 710) {
+                    $(e).addClass('danger')
+                }
+            })
+         
+        }, 100)
+
+        function insertSpans() {
+            for (let i = 0; i < lineNumber; i++) {
+                const line = $(allLines[i]);
+
+                let rand = Math.floor(Math.random() * 20);
+                if (rand <= lvl) {
+                    let text = chooseText();
+                    line.append('<span>' + text + '</span>')
+                }
+            }
+            if (!gameEnd) {
+                setTimeout(insertSpans, time);
+            }
+        }
+        insertSpans()
+
+        function chooseText() {
+            let rand = Math.floor(Math.random() * text.length);
+            let forReturn = text[rand].toLowerCase();
+            activeText.push(forReturn);
+            text.splice(rand, 1);
+            return forReturn;
+        }
+
+        function clearAllIntervals() {
+            clearInterval(moveAll);
+            clearInterval(speedUp)
+            mainInput.off('keyup', checkInputTypings)
+            gameEnd = true;
+            if (localStorage.nick) {
+                inputForNick.val(localStorage.nick)
+            }
+            nickNameDiv.show()
+        }
+    }
+
+    function displayWinners() {
+        if (localStorage.nick) {
+            $.ajax({
+                url: '/getAll',
+                method: 'get'
+            })
+                .done(function (res) {
+                    let index = res.map(e => e.nick).indexOf(localStorage.nick);
+                    if (index != -1) {
+                        index++;
+                        first10(index);
+                    } else {
+                        first10(null)
+                    }
+
+                })
+        } else {
+            first10(null)
+        }
+
+        function first10(index) {
+
+            $.ajax({
+                url: "/nicks",
+            })
+                .then(function (res) {
+                    res.forEach((e, i) => {
+                        winnerScores.append(`<p><kbd>${i + 1}</kbd> ${e.nick} (${e.wordNumber})</p>`)
+                    })
+                    if (index) {
+                        winnerScores.append(`<p> ... </p>`)
+                        winnerScores.append(`<p><kbd>${index}</kbd> ${localStorage.nick}`)
+                    }
+                })
+        }
+    }
+})

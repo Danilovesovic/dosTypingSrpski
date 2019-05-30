@@ -51,7 +51,7 @@ $(function () {
         let text = fiveLetterWords;
         let gameEnd = false;
         let activeText = [];
-        let speed = 9; //default 1
+        let speed = 1; //default 1
         let allLines = $('.line');
         let lineNumber = allLines.length;
         let time = 7000;
