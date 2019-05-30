@@ -41,11 +41,12 @@
             <input type="text" id="main-input">
         </div>
         <div class="startBtn">start</div>
-        <div class="nickname">
-            <input type="text" id="inputForNick" placeholder="nickname" maxlength="12">
-            <button id="save-score">Save score</button>
-            <button id="start-again">Start again</button>
-        </div>
+        <form id="finish_form" class="nickname" action="/storeNewResult" method="POST">
+            <input type="text" id="inputForNick" name="inputForNick" placeholder="nickname" maxlength="12">
+            <input type="hidden" name="score">
+            <button type="submit" name="sub" id="save-score">Save score</button>
+            <button type="button" id="start-again">Start again</button>
+        </form>
         <div class="winner-scores">
             <h2>Scores</h2>
         </div>

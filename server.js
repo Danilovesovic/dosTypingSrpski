@@ -22,11 +22,18 @@ app.get('/getAll',function(req,res){
     })
 })
 
-app.post('/insertNick',function(req,res){
-    db.nicks.insert({nick: req.body.nick,wordNumber: parseInt(req.body.wordCount)},function (err,docs) {
+app.post('/storeNewResult',function(req,res){
+    if(req.body.sub === 'yee'){
+        // preko forme
+         db.nicks.insert({nick: req.body.inputForNick,wordNumber: parseInt(req.body.fw)},function (err,docs) {
         if(err) console.log(err);
-        res.send("Ok");
+        res.redirect('http://dostyping.com');
     })
+    }else{
+        res.redirect('http://dostyping.com');
+    }
+
+
 
 })
 app.listen(80,function(){
